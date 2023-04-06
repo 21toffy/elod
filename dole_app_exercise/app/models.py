@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 
 
 class User(database.Model):
-    __tablename__ = 'Users'
+    __tablename__ = 'users'
 
     id = database.Column(database.Integer, autoincrement=True, primary_key=True)
     name = database.Column(database.String(100), nullable=False, unique=True)
@@ -15,6 +15,7 @@ class User(database.Model):
 
     def __repr__(self):
         return f'<User: {self.name}>'
+    
 
 class Department(database.Model):
     __tablename__ = 'departments'
@@ -25,7 +26,6 @@ class Department(database.Model):
 
     def __repr__(self):
         return '<Department %r>' % self.name
-
 
 class Tenure(database.Model):
     __tablename__ = 'tenures'

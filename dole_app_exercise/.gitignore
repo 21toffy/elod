@@ -4,13 +4,13 @@
 ### Flask ###
 .webassets-cache
 .env
-
+do+/
 ### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-
+dole_migrations/
 # C extensions
 *.so
 
