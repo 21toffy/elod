@@ -1,34 +1,28 @@
 from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from app.config import app_config
 
-# Import the configurations
-from instance.config import app_config
+database = SQLAlchemy()
+migrate = Migrate()
 
-application = Flask(
+
+def create_app(config_name):
+    application = Flask(
         import_name="app",
         template_folder="templates",
         static_folder='static',
-        instance_relative_config=True)
+        instance_relative_config=True
+    )
 
-database = SQLAlchemy(application)
-
-def create_app(config_name):
     application.config.from_object(app_config[config_name])
-    application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     database.init_app(application)
-
-    migrate = Migrate(app = application, db = database, directory="dole_migrations")
-
-    register_blueprints()
-
+    migrate.init_app(application, database, directory="dole_migrations")
+    register_blueprints(application)
     return application
 
 
-"""
- The following registers the Blueprints with the application.
-"""
-def register_blueprints():
+def register_blueprints(application):
     # Import all BluePrints
     from .home import home as home_blueprint
     application.register_blueprint(home_blueprint, url_prefix='/home')
