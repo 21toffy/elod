@@ -1,44 +1,90 @@
-{% set active_page = "home" %}
 
-{% block title %} - All Users {% endblock %}
+{% extends "base.html" %}
+
+{% set active_page = "dashboard" %}
+
+{% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="panel-list">
-    <h3 class="ml-2 mt-3">All Users</h3>
-    <div class="row row-content">
-        <div class="col-12">
-            <h4>{{ Users }}</h4>
-        </div>
+{% include "components/navbar.html" %}
 
-        <div class="table-responsive-sm col-12">
-            {% if users|length > 0 %}
-            <table class="table table-sm table-panel table-desktop">
-                <thead>
-                <tr>
-                    <th scope="col th-sm">#</th>
-                    <th scope="col th-sm">User ID</th>
-                    <th scope="col th-sm">Name</th>
-                    <th scope="col th-sm">Salary</th>
-                    <th scope="col th-sm">Date Joined</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for user in users %}
-                <tr class='clickable-row'>
-                    <th scope="row">{{ loop.index }}</th>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.salary }}</td>
-                    <td>{{ user.time_created.strftime('%Y/%m/%d') }}</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
 
-            {% else %}
-            <div class="text-center empty-table" style="display: block;">No Users to display</div>
-            {% endif %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="alert alert-info">
+  <ul class="list-unstyled">
+  {% for message in messages %}
+    <li>{{ message }}</li>
+  {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{% endwith %}
+
+
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="text-center">Upload a File</h4>
+                </div>
+                <div class="card-body">
+                  
+                    <form action="/home/all/users" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Select File:</label>
+                            <input type="file" class="form-control-file" id="file" name="file">
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+
+
+
+
+<div class="container">
+    <div class="row mt-3">
+      <div class="col">
+        <h3 class="mb-3">All Users</h3>
+        {% if users|length > 0 %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">User ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Salary</th>
+                <th scope="col">Date Joined</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr class='clickable-row'>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.time_created.strftime('%Y/%m/%d') }}</td>
+<td><a href="{{ url_for('home.user_detail', user_id=user.id) }}" class="btn btn-primary">View user details</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="text-center empty-table mt-3" style="display: block;">No Users to display</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  
+
+<!-- add dashboard-specific content here -->
 {% endblock %}
